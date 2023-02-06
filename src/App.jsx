@@ -1,30 +1,35 @@
-import { useEffect, useState } from "react";
 import Todo from "./components/Todo";
-import TodoCount from "./components/TodoCount";
 import UseFetch from "./hooks/useFetch";
-function App(props) {
-  const todo = UseFetch();
-  const initialTodo = todo.map((data) => data.completed);
 
-  const initialCount = todo.filter((data) => data.completed === true);
+function App() {
+  const [todos, setTodos] = UseFetch(
+    "https://jsonplaceholder.typicode.com/todos"
+  );
+  const handleChange = (event) => {
+    setTodos((prev) => {
+      return prev.map((todo) => {
+        if (todo.id.toString() === event.target.id) {
+          return { ...todo, completed: event.target.checked };
+        }
+        return todo;
+      });
+    });
+  };
 
-  function checkedValue(event) {
-    setTodo(event.target.checked);
-    if (event.target.checked === false) {
-      setState(newCount - 1);
-    } else setState(newCount + 1);
-  }
-  const [newCount = initialCount.length, setState] = useState();
-  const [completedtodo = initialTodo, setTodo] = useState();
+  const numOfCompletedTodos = todos.filter((todo) => todo.completed).length;
 
-  useEffect(() => {
-    document.title = `You clicked ${newCount} times`;
-  });
   return (
-    <div className="flex flex-col ">
-      <TodoCount count={newCount} />
-      <Todo checked={checkedValue} newCountTodo={"completed"}></Todo>
-    </div>
+    <main>
+      <h1 className="mt-4 text-center text-3xl">
+        {numOfCompletedTodos} / {todos.length} Completed
+      </h1>
+      <ul className="container mx-auto flex flex-col items-center gap-y-2 pt-8">
+        {todos.map((todo) => (
+          <Todo key={todo.id} todo={todo} onChange={handleChange} />
+        ))}
+      </ul>
+    </main>
   );
 }
+
 export default App;

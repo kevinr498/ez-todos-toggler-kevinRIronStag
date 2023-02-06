@@ -1,15 +1,13 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import React from "react";
 
-const baseUrl = "https://jsonplaceholder.typicode.com/todos";
-export default function UseFetch() {
-  useEffect(() => {
-    axios(baseUrl)
-      .then((response) => response.data)
-      .then((data) => {
-        setTodo(data);
-      });
-  }, []);
-  const [todo, setTodo] = useState([]);
-  return todo;
+export default function useFetch(url) {
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, [url]);
+
+  return [data, setData];
 }

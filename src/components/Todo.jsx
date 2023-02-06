@@ -1,26 +1,25 @@
 import PropTypes from "prop-types";
-import useFetch from "../hooks/useFetch";
 
-export default function Todo(props) {
-  const todo = useFetch();
-
+export default function Todo({ todo, onChange }) {
   return (
-    <div className="App" role="checkbox" aria-checked>
-      {todo.map((data) => (
-        <h4>
-          {data.title}{" "}
-          <input
-            type="checkbox"
-            checked={data[props.newCountTodo]}
-            onClick={props.checked}
-          />{" "}
-        </h4>
-      ))}
-    </div>
+    <li key={todo.id}>
+      <label htmlFor={todo.id}>{todo.title}</label>
+      <input
+        id={todo.id}
+        type="checkbox"
+        checked={todo.completed}
+        className="ml-2 focus:ring-0"
+        onChange={onChange}
+      />
+    </li>
   );
 }
 
 Todo.propTypes = {
-  newCountTodo: PropTypes.string,
-  checked: PropTypes.func,
+  todo: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    completed: PropTypes.bool.isRequired,
+  }),
+  onChange: PropTypes.func.isRequired,
 };
